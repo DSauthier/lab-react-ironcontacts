@@ -6,9 +6,43 @@ import contacts from './contactList.json'
 class Contact extends Component {
   state = {
     contacts: contacts,
-    someContacts: contacts.slice(0, 5)
+    someContacts: contacts.slice(0, 5),
+    sortNameAscending: true,
+    sortPopAscending: true,
     // popularity: contacts.popularity
   };
+
+  showListOfContact = () =>{
+    console.log('go')
+    return(
+
+      this.state.someContacts.map((ourCeleb, index) => {
+        console.log(ourCeleb)
+        return <div>
+            <table>
+
+              <tr>
+                <td>
+                  <img src={ourCeleb.pictureUrl} />
+                </td>
+                <td>
+                  <h2>{ourCeleb.name}</h2>
+                </td>
+                <td>
+                  <h4>{ourCeleb.popularity}</h4>
+                </td>
+              <td><button onClick={() => this.deleteCeleb(index)}>
+                Delete Celebrity
+              </button></td>
+              </tr>
+            </table>
+            {/* <li key={ourCeleb.index}>
+              
+            </li> */}
+          </div>;
+    })
+    ) 
+  }
 
   addRandomCelebrity = () => {
     const randomCeleb = [...this.state.contacts]; // copies main array of celebs
@@ -35,16 +69,17 @@ class Contact extends Component {
     const listOfContacts = [...this.state.someContacts];
     listOfContacts.sort((firstCeleb, secondCeleb) => {
       if (firstCeleb.popularity > secondCeleb.popularity) {
-        return -1;
+        return this.state.sortPopAscending? -1:1;
       } else if (firstCeleb.popularity < secondCeleb.popularity) {
-        return 1;
+        return this.state.sortPopAscending ? 1 : -1;
       }
       return 0;
     });
 
     this.setState({
       //changes the state to add the new random person
-      someContacts: listOfContacts
+      someContacts: listOfContacts,
+      sortPopAscending: !this.state.sortPopAscending
     });
   };
   sortingCelebsbyName = () => {
@@ -52,16 +87,17 @@ class Contact extends Component {
     const listOfContacts = [...this.state.someContacts];
     listOfContacts.sort((firstCeleb, secondCeleb) => {
       if (firstCeleb.name > secondCeleb.name) {
-        return 1;
+        return this.state.sortNameAscending ? 1 : -1;
       } else if (firstCeleb.name < secondCeleb.name) {
-        return -1;
+        return this.state.sortNameAscending ? -1 : 1;
       }
       return 0;
     });
 
     this.setState({
       //changes the state to add the new random person
-      someContacts: listOfContacts
+      someContacts: listOfContacts,
+      sortNameAscending : !this.state.sortNameAscending
     });
   };
   deleteCeleb = (i) => {
@@ -72,32 +108,34 @@ class Contact extends Component {
       someContacts: newContactList
     })
   }
-
+// =-=--=-==--=-==--=-=here is where we call the functions and show everything=-==--
   render() {
-    const contactList = this.state.someContacts.map((ourCeleb, index) => {
-      return <li key={ourCeleb.index}>
-          <h2>Name: {ourCeleb.name}</h2>
-          <img src={ourCeleb.pictureUrl} />
-          <h4>Popularity: {ourCeleb.popularity}</h4>
-          <button onClick={() => this.deleteCeleb(index)}>
-            Delete Celebrity
+  
+
+    return <div>
+      <table>
+
+      <tr>
+        <th>Picture</th>
+        <th>Name</th>
+        <th>Popularity</th>
+      </tr>
+        <div className="eachCeleb">
+          <button onClick={() => this.addRandomCelebrity()}>
+            Add Random Contact
           </button>
-        </li>;
-    });
-
-    return (
-      <div className="eachCeleb">
-        <button onClick={() => this.addRandomCelebrity()}>
-          Add Random Contact
-        </button>
-        <button onClick={() => this.sortingCelebsbyPopularity()}>
-          sort by Popularity
-        </button>
-        <button onClick={() => this.sortingCelebsbyName()}>sort by Name</button>
-
-        {contactList}
-      </div>
-    );
+          <button onClick={() => this.sortingCelebsbyPopularity()}>
+            sort by Popularity
+          </button>
+          <button onClick={() => this.sortingCelebsbyName()}>
+            sort by Name
+          </button>
+        </div>
+        <th>
+      <div>{this.showListOfContact()}</div>
+        </th>
+      </table>
+      </div>;
   }
 }
 

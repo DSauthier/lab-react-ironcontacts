@@ -22,9 +22,9 @@
   font-size: large;
 }
 .eachCeleb{
-  border: 2px solid red;
+  justify-content: center;
 }
-.eachCeleb img{
+img{
   height: 20vh;
 }
 .eachCeleb li{
